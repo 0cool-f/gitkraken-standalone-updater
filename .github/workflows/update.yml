@@ -1,0 +1,28 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+name: update
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry-run:
+        description: Build the update without publishing it
+        type: boolean
+        default: false
+  push:
+    branches: [main]
+
+permissions: {}
+
+concurrency:
+  group: update
+
+jobs:
+  update:
+    permissions:
+      contents: read
+      issues: write
+    uses: 0cool-f/aur-ci/.github/workflows/update.yml@v1
+    with:
+      pkgbase: gitkraken-standalone
+      dry-run: ${{ github.event_name == 'push' || inputs.dry-run }}
+    secrets: inherit
